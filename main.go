@@ -10,21 +10,26 @@ import (
 )
 
 var (
-	ca                  *x509.Certificate
-	transport           *http.Transport
-	tlsHttpServerConfig *tls.Config
-	tlsDoTServerConfig  *tls.Config
-	caString            string
-	publicIP            *string
-	mitmAAAA            = flag.String("mitmAAAA", "", "IPv6 address to use for MITM")
-	dnsPort             *int
-	dnsTlsPort          *int
-	httpPort            *int
-	httpsPort           *int
-	dotDomain           *string
-	blockListPath       *string
-	readerPort          *int
-	config              Config
+	ca                   *x509.Certificate
+	transport            *http.Transport
+	tlsHttpServerConfig  *tls.Config
+	tlsDoTServerConfig   *tls.Config
+	caString             string
+	publicIP             *string
+	mitmAAAA             = flag.String("mitmAAAA", "", "IPv6 address to use for MITM")
+	dnsPort              *int
+	dnsTlsPort           *int
+	httpPort             *int
+	httpsPort            *int
+	dotDomain            *string
+	blockListPath        *string
+	readerPort           *int
+	config               Config
+	readerBrowser        = flag.String("readerBrowser", "", "Path to the optional Patchright worker (browser/render.mjs)")
+	readerNode           = flag.String("readerNode", "node", "Node.js executable for the browser worker")
+	readerBrowserChannel = flag.String("readerBrowserChannel", "chromium", "Browser worker channel: chromium, chrome or msedge")
+	readerBrowserHeadful = flag.Bool("readerBrowserHeadful", false, "Show the worker browser window (requires a desktop)")
+	readerOnly           = flag.Bool("readerOnly", false, "Run FreeWorldNews Reader only, without DNS, proxy or CA setup")
 )
 
 func main() {
@@ -42,6 +47,24 @@ func main() {
 	//Parse config file
 	//TODO make flags overridable
 	parseConfigFile()
+	if *readerBrowser != "" {
+		browser, err := newCommandBrowser(*readerNode, *readerBrowser, *readerBrowserChannel, *readerBrowserHeadful)
+		if err != nil {
+			log.Fatal(err)
+		}
+		readerRenderer = browser.fetch
+		log.Println("[READER] Patchright browser fallback enabled")
+	}
+	if *readerOnly {
+		if *readerPort == 0 {
+			*readerPort = 8080
+		}
+		if *publicIP == "" {
+			*publicIP = "127.0.0.1"
+		}
+		serveReader(*readerPort)
+		return
+	}
 
 	if *publicIP == "" {
 		ip, err := getPublicIP()

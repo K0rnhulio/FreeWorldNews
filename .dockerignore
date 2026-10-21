@@ -1,0 +1,13 @@
+.git
+cert
+browser/node_modules
+chrome-profile
+Read with FreeNews.cmd
+read-with-freenews.ps1
+dist
+*.exe
+*.exe~
+freenews
+freeworldnews
+FreeWorldNews
+config.toml

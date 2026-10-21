@@ -1,0 +1,34 @@
+name: Article or reader issue
+description: Help improve an extraction format or report unexpected reader behavior.
+title: "[Reader] "
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Public article URL
+      description: Leave out private URLs, credentials, and account tokens.
+      placeholder: https://example.com/article
+  - type: dropdown
+    id: mode
+    attributes:
+      label: How did you open it?
+      options:
+        - Paste-a-link reader
+        - Patchright / Chromium
+        - Visible Chrome
+        - Browser bookmark or HTML import
+        - DNS / reverse proxy
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Describe the expected result and what appeared instead.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and redacted logs
+      description: OS, Go/Node versions, and relevant log lines. Do not upload cookies, browser profiles, or full article captures.

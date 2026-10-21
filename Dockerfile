@@ -1,20 +1,15 @@
-FROM alpine
+FROM golang:1.27-alpine AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -o /out/freeworldnews .
 
+FROM alpine:3
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
-
-ADD ./freenews .
-ADD ./config.toml .
-
-# DNS Ports
-EXPOSE 53/tcp
-EXPOSE 53/udp
-EXPOSE 853/tcp
-EXPOSE 853/udp
-
-# HTTP Ports
-EXPOSE 80/tcp
-EXPOSE 443/tcp
-
-RUN chmod +x /app/freenews
-
-ENTRYPOINT ["/app/freenews"]
+COPY --from=build /out/freeworldnews ./freeworldnews
+COPY config.example.toml ./config.toml
+EXPOSE 8080
+ENTRYPOINT ["/app/freeworldnews"]
+CMD ["-readerOnly", "-readerPort", "8080"]

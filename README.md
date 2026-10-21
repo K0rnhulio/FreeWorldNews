@@ -1,141 +1,148 @@
-# FreeNews 🔨💵🧱
+<p align="center">
+  <img src="docs/assets/hero.svg" alt="FreeWorldNews — Read the world. Skip the clutter." width="100%">
+</p>
 
-![build status](https://github.com/fipso/freenews/actions/workflows/go.yml/badge.svg?branch=main)
+<p align="center">
+  <a href="https://github.com/K0rnhulio/FreeWorldNews/actions/workflows/go.yml"><img src="https://github.com/K0rnhulio/FreeWorldNews/actions/workflows/go.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-007e73" alt="GPLv3 license"></a>
+  <img src="https://img.shields.io/badge/Go-powered-007d9c?logo=go&amp;logoColor=white" alt="Built with Go">
+  <img src="https://img.shields.io/badge/self--hosted-your%20server-10262d" alt="Self-hosted">
+</p>
 
-Reverse Proxy & DNS based solution to bypass paywalls written in go
+<p align="center"><b>Your news. Your server. Your space to think.</b></p>
 
-### Features
+FreeWorldNews turns article links into calm, readable pages. It looks for the
+story in the page, embedded data, an optional real browser, and available
+archive snapshots—then keeps the text, headings, images, and links that matter.
 
-- Pull from Google Cache Bypass (shoutout to 12ft.io)
-- HTTP Header based bypasses
-    - AdsBot-Google User Agent
-    - X-Forwarded-For Google Datacenter IP
-    - Twitter t.co Referer
-    - Drop Cookie & Set-Cookie
-- HTTP Body patches
-    - Disable JS. Removes <script> tags
-    - Inject custom html/js
-- DNS/Hosts based AdBlock
-- DNS server supports UDP & TLS (DoT)
+**Paste a link. Find the article. Make room to read.**
 
-### Usage
+## What makes it different
 
-1. Tell your devices to use your own DNS server
-2. Go to `free.news`
-3. Download and install CA file (apps not Wi-Fi)
-4. Profit
+- **Finds text beyond the visible preview.** Extracts embedded JSON, Next.js
+  article bodies, and Arc/Fusion content blocks in reading order.
+- **A browser when you need one.** Optional Patchright rendering runs a real
+  Chromium engine. Installed Chrome can run visibly on your desktop.
+- **Learns what works.** Remembers successful fetch strategies, backs off after
+  verification pages, and respects server rate limits.
+- **Reads what you already opened.** Import saved HTML or use the browser
+  bookmark. Imported content is sanitized without running its scripts.
+- **Built for your own server.** Go application, light/dark reader, bounded
+  memory cache, and no required external extraction service.
+- **Keeps the original toolkit.** Optional DNS, reverse proxy, DNS over TLS,
+  and domain-based blocking remain available for advanced setups.
 
-### How?
-- ./freenews spawns a DNS and a HTTP server (and TLS versions of it ofc)
-- You install a custom CA on your device
-- Your device sends DNS querys to your own DNS. If the site is on your bypass whitelist the server will respond with its own public IP, otherwise it will forward to an upstream DNS like 1.1.1.1
-- Your phone then connects to the HTTP reverse proxy mirror that you own
-- Freenews HTTP server returns the unpaywalled version
+<details>
+<summary>Take a look at the reader</summary>
 
-### How to install ?
+![FreeWorldNews reader in dark mode](docs/assets/reader-preview.png)
 
-- Host should have port 53/UDP, 80,443,853/UDP open (DNS ports can be changed)
-- If port 53 is blocked try to disable your local DNS server ex: `systemctl stop systemd-resolved`
+</details>
 
-### Docker
+## Start reading
 
-Requirements:
+Install a current Go release. CI builds with Go 1.27 on Linux and Windows.
 
-- Docker & docker-compose
-
-1. `mkdir freenews && cd freenews`
-2. Get our docker-compose  
-   `curl -O https://raw.githubusercontent.com/fipso/freenews/main/docker-compose.yml`
-3. Run it `sudo docker-compose up -d`
-  
--  Check logs `sudo docker-compose logs --follow`
--  Update `sudo docker-compose pull && sudo docker-compose up -d`
--  Add hosts: edit config.toml and `sudo docker-compose restart`
-
-### Build it yourself
-
-Requirements:
-
-- Go 1.18+
-- Currently only Linux is tested (Windows, macOS, etc... should work)
-
-1. `git clone https://github.com/fipso/freenews.git`
-2. `cd freenews`
-3. `go build . && chmod +x freenews`
-4. `sudo setcap CAP_NET_BIND_SERVICE=+eip freenews` (Optional. Allows binding low ports as normal user.)
-5. `./freenews`
-
-**Auto Start (systemd)**:  
-If you choose docker you obviously dont need this.  
-Create `freenews.service` at `/lib/systemd/system/`.  
-Example Service:  
-```systemd
-[Unit]
-Description=FreeNews DNS & Reverse Proxy
-
-[Service]
-User=<some non root user>
-WorkingDirectory=/home/<user>/...
-ExecStart=/home/<user>/.../freenews
-# DoT & AdBlock example:
-#ExecStart=/home/<user>/.../freenews -dotDomain <your domain> -blockList <blocklist file>
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
+```sh
+git clone https://github.com/K0rnhulio/FreeWorldNews.git
+cd FreeWorldNews
+go build -o freeworldnews .
+./freeworldnews -readerOnly
 ```
 
-### How to use DNS over TLS ?
+Open **[localhost:8080](http://localhost:8080)** and paste an article link.
+Reader-only mode needs no DNS changes, privileged ports, or CA installation.
 
-DNS over TLS (DoT) is a new privacy focused way to use normal DNS using a TLS socket.
-To make this work with this project, you have to get yourself a domain and SSL cert.
-Place the cert (**Copy `fullchain.pem` instead of `cert.pem` to `dot_cert.pem` if you are using Let's Encrypt**) file and its private key at `cert/dot_cert.pem` and `cert/dot_key.pem`.
-Start freenews with the `-dotDomain <your domain>` flag to enable DoT. Make sure to open port 853/UDP.
+On Windows:
 
-### How do I change the DNS on mobile ?
+```powershell
+go build -o freeworldnews.exe .
+.\freeworldnews.exe -readerOnly
+```
 
-Android:
-Use **one** of the following:
+To use another reader port, add `-readerPort 8088`.
 
-- Recommended: Use private DNS option (requires DoT)
-- Wi-Fi Settings > Use static IP > DNS 1
-- Use a 3rd party app to use DNS or DoT
+## Add browser rendering
 
-IOS:
+Install Node.js 20+ for the optional browser worker:
 
-- Recommended: Generate a DNS [profile](https://dns.notjakob.com/index.html) (requires DoT)
+```sh
+cd browser
+npm ci
+npm run install-browser
+cd ..
+./freeworldnews -readerOnly -readerBrowser browser/render.mjs
+```
 
-### How to add hosts to the unpaywall list ?
+For **visible Google Chrome** on Windows, install Chrome and run:
 
-You can add new hosts to the list by appending a `[[host]]` block to the `config.toml` file.
+```powershell
+.\freeworldnews.exe -readerOnly -readerBrowser browser/render.mjs -readerBrowserChannel chrome -readerBrowserHeadful
+```
 
-### How do I enable AdBlock ?
+On Linux, install browser system dependencies with
+`npx patchright install --with-deps chromium` from `browser/`. Run the application
+as a regular user so Chromium's sandbox can stay enabled. The default browser
+mode is headless; visible mode needs a desktop session.
 
-1. Download a DNS blocklist  
-   ex: `curl -O https://raw.githubusercontent.com/hagezi/dns-blocklists/main/domains/light.txt`
-2. Start with `-blockList` param  
-   ex: `./freenews -blockList light.txt`
+## Run with Docker
 
-We currently redirect all blocked domains to 127.0.0.1
+```sh
+docker compose up --build -d
+```
 
-### TODO
+Open **[localhost:8080](http://localhost:8080)**. The default container runs the
+lightweight reader. Browser rendering requires the native Node.js/Chromium
+setup above; it is not included in this image.
 
-- [x] Fix DNS over TLS
-- [x] Add docker image & instructions
-- [x] Add DNS based AdBlock
-- [x] Add non root running instructions
-- [ ] Allow TCP connections
-- [ ] Improve code quality and comments
-- [ ] Provide better usage instructions
-- [ ] More config options
-- [ ] Make flags overridable by TOML config
+## How a link becomes a story
 
-### Credits
+```mermaid
+flowchart LR
+  A[Article link] --> B[HTTP fetch]
+  B --> C[Extract page and embedded data]
+  C --> D{Enough article text?}
+  D -->|Yes| E[Sanitize and read]
+  D -->|No| F[Optional browser rendering]
+  F --> I{Enough article text?}
+  I -->|Yes| E
+  I -->|No| G[Configured fetch options and archive fallback]
+  G --> E
+  H[Saved HTML or browser bookmark] --> E
+```
 
-- https://github.com/drk1wi/Modlishka Request body compression
+The reader remembers a successful approach for each hostname for 30 minutes.
+An explicit `from_archive` host setting takes priority. Browser rendering is
+skipped when a server asks requests to slow down.
 
-### Star History
-[![Star History Chart](https://api.star-history.com/svg?repos=fipso/freenews&type=Date)](https://star-history.com/#fipso/freenews&Date)
+## What to expect
 
-### Advertisment
-In case your are looking for a ETH Node provider where you can deploy your Containers directly onto a Node [checkout BLAZED.sh](https://blazed.sh)
+FreeWorldNews can extract article text that a publisher delivers in HTML or
+embedded data, including text hidden behind some client-side previews. It
+cannot recover text that was never delivered. Browser verification can still
+block requests, and the worker does not click CAPTCHAs.
+
+HTTP articles may be cached for up to five minutes within a 64-entry, 4 MB
+budget. Private/no-store/no-cache responses, browser-rendered articles, and
+imports do not enter the shared cache. Browser workers use fresh temporary
+profiles and public-address-only network access.
+
+## Go deeper
+
+- [Configuration, DNS, proxy, and service setup](docs/advanced.md)
+- [Development, tests, and extraction diagnostics](docs/development.md)
+- [Contributing](CONTRIBUTING.md)
+- [Report a site or reader issue](https://github.com/K0rnhulio/FreeWorldNews/issues/new/choose)
+
+## Roots and license
+
+FreeWorldNews builds on [fipso/freenews](https://github.com/fipso/freenews),
+with a new identity and an expanded article reader, browser fallback, and
+structured-data extraction. Thank you to the original authors and contributors.
+
+Browser rendering uses [Patchright](https://github.com/Kaliiiiiiiiii-Vinyzu/patchright).
+The original proxy compression work credits
+[Modlishka](https://github.com/drk1wi/Modlishka).
+
+Distributed under the [GNU General Public License v3](LICENSE). The upstream
+license is preserved.

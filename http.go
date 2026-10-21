@@ -23,7 +23,7 @@ var (
 	// Data blocks like __NEXT_DATA__ or ld+json never execute, and often hold
 	// the full article text, so disable_js keeps them for inject_html to use
 	jsonScriptRegexp = regexp.MustCompile(`(?i)^<script\b[^>]*\btype\s*=\s*["']?application/(ld\+)?json`)
-	bodyRegexp   = regexp.MustCompile(`(?i)<body\b[^>]*>`)
+	bodyRegexp       = regexp.MustCompile(`(?i)<body\b[^>]*>`)
 )
 
 // Mitm warning banner & menu. A menu.html next to the binary overrides it
@@ -135,7 +135,7 @@ func mainHandler(w http.ResponseWriter, r *http.Request) {
 func infoHandler(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/ca.pem" {
 		w.Header().Set("Content-Type", "application/x-pem-file")
-		w.Header().Set("Content-Disposition", `attachment; filename="freenews-ca.pem"`)
+		w.Header().Set("Content-Disposition", `attachment; filename="freeworldnews-ca.pem"`)
 		w.Write([]byte(caString))
 		return
 	}

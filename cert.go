@@ -80,8 +80,8 @@ func generateCA() {
 	template := &x509.Certificate{
 		SerialNumber: randomSerial(),
 		Subject: pkix.Name{
-			Organization: []string{"FreeNews MITM CA"},
-			CommonName:   "FreeNews MITM CA",
+			Organization: []string{"FreeWorldNews MITM CA"},
+			CommonName:   "FreeWorldNews MITM CA",
 		},
 		NotBefore:             time.Now().Add(-time.Hour),
 		NotAfter:              time.Now().AddDate(10, 0, 0),
@@ -156,7 +156,7 @@ func issueLeafCert(name string) (*tls.Certificate, error) {
 		// after a restart
 		SerialNumber: randomSerial(),
 		Subject: pkix.Name{
-			Organization: []string{"FreeNews MITM"},
+			Organization: []string{"FreeWorldNews MITM"},
 			CommonName:   name,
 		},
 		DNSNames:    []string{name},

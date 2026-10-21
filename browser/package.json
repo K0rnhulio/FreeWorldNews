@@ -1,0 +1,14 @@
+{
+  "name": "freeworldnews-browser",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "install-browser": "patchright install chromium",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "patchright": "1.64.1"
+  }
+}

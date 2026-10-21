@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="480" viewBox="0 0 1280 480" role="img" aria-labelledby="title description">
+  <title id="title">FreeWorldNews — Read the world. Skip the clutter.</title>
+  <desc id="description">A self-hosted article reader with smart extraction and browser rendering.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1"><stop stop-color="#102b32"/><stop offset="1" stop-color="#08181e"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#57e3bd" stop-opacity=".16"/><stop offset="1" stop-color="#57e3bd" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1280" height="480" rx="20" fill="url(#background)"/>
+  <circle cx="1030" cy="228" r="310" fill="url(#glow)"/>
+  <g stroke="#28454c" stroke-width="1" opacity=".65"><path d="M760 0v480M840 0v480M920 0v480M1000 0v480M1080 0v480M1160 0v480M1240 0v480M720 80h560M720 160h560M720 240h560M720 320h560M720 400h560"/></g>
+  <g font-family="Segoe UI,Helvetica,Arial,sans-serif">
+    <text x="64" y="74" fill="#57e3bd" font-size="13" font-weight="700" letter-spacing="4">YOUR WORLD. YOUR READER.</text>
+    <text x="60" y="161" fill="#f1f7f5" font-size="63" font-weight="750" letter-spacing="-3">Free<tspan fill="#57e3bd">World</tspan>News</text>
+    <text x="64" y="233" fill="#f1f7f5" font-size="35" font-weight="600" letter-spacing="-.8">Read the world. Skip the clutter.</text>
+    <text x="65" y="281" fill="#a5bbc0" font-size="19">Paste a link. Find the article. Make room to read.</text>
+    <g font-size="12" font-weight="650" letter-spacing="1.4">
+      <rect x="64" y="334" width="138" height="37" rx="18.5" fill="#1c3b42"/>
+      <text x="87" y="358" fill="#d3e7e1">SELF-HOSTED</text>
+      <rect x="214" y="334" width="169" height="37" rx="18.5" fill="#1c3b42"/>
+      <text x="234" y="358" fill="#d3e7e1">SMART EXTRACTION</text>
+      <rect x="395" y="334" width="164" height="37" rx="18.5" fill="#1c3b42"/>
+      <text x="416" y="358" fill="#d3e7e1">BROWSER-POWERED</text>
+    </g>
+    <text x="65" y="429" fill="#6f959f" font-size="12" letter-spacing="2">OPEN SOURCE · BUILT WITH GO + PATCHRIGHT</text>
+  </g>
+  <g fill="none" stroke="#57e3bd" stroke-width="2.4" opacity=".9">
+    <circle cx="1045" cy="218" r="128"/>
+    <ellipse cx="1045" cy="218" rx="58" ry="128"/>
+    <ellipse cx="1045" cy="218" rx="100" ry="128" opacity=".35"/>
+    <path d="M917 218h256M935 154h220M935 282h220M956 112h178M956 324h178"/>
+  </g>
+  <g transform="translate(860 236) rotate(-7)">
+    <rect width="216" height="163" rx="13" fill="#eef5f2" stroke="#143c42" stroke-width="4"/>
+    <rect x="23" y="25" width="55" height="52" rx="5" fill="#0d8b7e"/>
+    <g stroke="#1c4149" stroke-width="6" stroke-linecap="round"><path d="M96 30h94M96 49h74M96 68h84"/></g>
+    <g stroke="#aec6c5" stroke-width="5" stroke-linecap="round"><path d="M25 102h165M25 120h165M25 138h114"/></g>
+  </g>
+  <circle cx="1161" cy="104" r="13" fill="#ffb47b"/>
+  <path d="M1188 310v18M1179 319h18" stroke="#ffb47b" stroke-width="3" stroke-linecap="round"/>
+</svg>

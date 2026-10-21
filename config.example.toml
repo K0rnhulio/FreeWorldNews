@@ -1,0 +1,14 @@
+# FreeWorldNews — reader mode works with any public article URL.
+# Host rules below are only needed for the optional DNS/reverse-proxy mode.
+info_host = "freeworldnews.test"
+upstream_dns = "1.1.1.1:53"
+
+[[host]]
+name = "example.com"
+# from_archive = false
+# social_referer = true
+# googlebot_ua = true
+# googlebot_ip = true
+# disable_cookies = true
+# disable_js = true
+# inject_html = ""

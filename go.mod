@@ -1,4 +1,4 @@
-module github.com/fipso/freenews
+module github.com/K0rnhulio/FreeWorldNews
 
 go 1.18
 
